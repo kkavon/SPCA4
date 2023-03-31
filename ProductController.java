@@ -19,6 +19,35 @@ public class ProductController {
     @Autowired
     private ProductRepository productRepository;
     
+    
+    @GetMapping("/products/addToCart/{id}")
+    public String addToCart(@PathVariable("id") Long id, @ModelAttribute("cart") Cart cart, Model model) {
+        Product product = productRepository.findById(id).orElseThrow(() -> new IllegalArgumentException("Invalid product Id:" + id));
+        cart.addItem(product, 1);
+        return "redirect:/stock/customer";
+    }
+    
+    @GetMapping("/cart")
+    public String viewCart(@ModelAttribute("cart") Cart cart, Model model) {
+        model.addAttribute("items", cart.getItems());
+        return "cart_view";
+    }
+    
+    @ModelAttribute("cart")
+    public Cart createCart() {
+        return new Cart();
+    }
+
+
+    @GetMapping("/stock/customer")
+    public String listProductCustomer(Model model) {
+        List<Product> products = productRepository.findAll();
+        model.addAttribute("products", products);
+        System.out.println("Products" + products);
+        return "products_display_customer";
+    }
+
+
     @GetMapping("/stock")
     public String listProduct(Model model) {
         List<Product> products = productRepository.findAll();
@@ -62,5 +91,5 @@ public class ProductController {
     }
     
 
-  
+
 }
