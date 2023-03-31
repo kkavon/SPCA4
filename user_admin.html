@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>Admin Inventory Management System</title>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+</head>
+<body>
+<div style="text-align: center">
+	<header>
+		<h1>AdminInventory Management System</h1>
+		<nav>
+			<ul>
+				<li><a href="/stock">View Stock and Update Products</a></li>
+				<li><a href="/products/create">Add a new product</a></li>
+				<li><a href="/admin/orders">View All Customer Detials and Orders</a><li>
+				<li><a href="/users/display">View Customers</a></li>
+				<li><a href="">Simulate Purchase of Stock Items</a></li>
+			</ul>
+		</nav>
+	</header>
+	<main>
+		<section id="stock-items">
+			<h2>Stock Items</h2>
+			<!-- display stock items here -->
+		</section>
+		<section id="search-stock">
+			<h2>Search Database</h2>
+			<form th:action="@{/products/search}" method="get">
+				<label for="search-bar">Search for a Stock Item:</label>
+				<input type="text" id="search-bar" name="searchTerm" placeholder="Seach for a product...">
+				<button type="submit">Search</button>
+			</form>
+		</section>
+	
+	</main>
+</body>
+</html>
+
+
+
+
+
+
+<!-- 	<section id="simulate-purchase">
+			<h2>Simulate Purchase of Stock Items</h2>
+			<form>
+				<label for="item-select">Select a Stock Item:</label>
+				<select id="item-select" name="item-select">
+					<option value="">--Please select an item--</option>
+				</select>
+				<label for="quantity">Enter Quantity:</label>
+				<input type="number" id="quantity" name="quantity" min="1" value="1">
+				<button type="submit">Purchase</button>
+			</form>
+		</section> -->
