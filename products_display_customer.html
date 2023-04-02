@@ -1,3 +1,4 @@
+<!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
@@ -5,6 +6,10 @@
 </head>
 <body>
     <h1>Products</h1>
+    <form th:action="@{/stock}" method="get">
+        <input type="text" name="filter" placeholder="Filter by title, manufacturer, or category" />
+        <input type="submit" value="Filter" />
+    </form>
     <table>
         <thead>
             <tr>
@@ -22,10 +27,9 @@
                 <td th:text="${product.price}"></td>
                 <td th:text="${product.category}"></td>
                 <td>
-    <a th:href="@{/products/addToCart/{id}(id=${product.id})}" class="btn btn-primary">Add To Cart</a>
-    <a href="/cart" class="btn btn-primary">View Cart</a>
-    
-</td>
+                    <a th:href="@{/products/addToCart/{id}(id=${product.id})}">Add To Cart</a>
+                    <a href="/cart">View Cart</a>
+                </td>
             </tr>
         </tbody>
     </table>
