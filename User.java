@@ -62,8 +62,6 @@ public class User {
 		this.paymentMethod = paymentMethod;
 	}
 
-    // Constructors, getters, and setters
-    
     
 }
 
