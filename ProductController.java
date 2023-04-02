@@ -1,6 +1,7 @@
 package net.codejava;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -47,14 +48,14 @@ public class ProductController {
         return "products_display_customer";
     }
 
-
-    @GetMapping("/stock")
-    public String listProduct(Model model) {
-        List<Product> products = productRepository.findAll();
-        model.addAttribute("products", products);
-        System.out.println("Products" + products);
-        return "products_display";
-    }
+//
+//    @GetMapping("/stock")
+//    public String listProduct(Model model) {
+//        List<Product> products = productRepository.findAll();
+//        model.addAttribute("products", products);
+//        System.out.println("Products" + products);
+//        return "products_display";
+//    }
 
     @GetMapping("/products/create")
     public String createProductForm(Model model) {
@@ -90,6 +91,50 @@ public class ProductController {
         return "products_display";
     }
     
+    
+    
+    
+    private List<Product> filterProducts(List<Product> products, String filter) {
+        if (filter == null || filter.isEmpty()) {
+            return products;
+        }
 
+        return products.stream()
+            .filter(product -> product.getTitle().toLowerCase().contains(filter.toLowerCase()) ||
+                    product.getManufacturer().toLowerCase().contains(filter.toLowerCase()) ||
+                    product.getCategory().toLowerCase().contains(filter.toLowerCase()))
+            .collect(Collectors.toList());
+    }
+    
+    @GetMapping("/stock")
+    public String listProduct(Model model, @RequestParam(required = false) String sortBy, @RequestParam(required = false) String filter) {
+        List<Product> products = productRepository.findAll();
+        
+        if (filter != null && !filter.isEmpty()) {
+            products = filterProducts(products, filter);
+        }
+
+        ProductSortingStrategy sortingStrategy;
+
+        if (sortBy != null) {
+            switch (sortBy) {
+                case "title":
+                    sortingStrategy = new SortByTitle();
+                    break;
+                case "manufacturer":
+                    sortingStrategy = new SortByManufacturer();
+                    break;
+                case "price":
+                    sortingStrategy = new SortByPrice();
+                    break;
+                default:
+                    sortingStrategy = new SortByTitle();
+            }
+            products = sortingStrategy.sort(products);
+        }
+
+        model.addAttribute("products", products);
+        return "products_display";
+    }
 
 }
