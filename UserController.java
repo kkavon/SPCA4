@@ -64,6 +64,12 @@ public class UserController {
         }
     }
     
+    @GetMapping("/users/display")
+    public String listUsers(Model model) {
+        List<User> users = userRepository.findAll();
+        model.addAttribute("users", users);
+        return "user_display";
+    }
     
 
     @GetMapping("/users/create")
@@ -78,5 +84,11 @@ public class UserController {
         return "redirect:/register_success";
     }
 
-
+    
+    @GetMapping("/admin/orders")
+    public String showAllOrders(Model model) {
+        List<Orders> orders = orderRepository.findAllWithUsers();
+        model.addAttribute("orders", orders);
+        return "orders_admin";
+    }
 }
