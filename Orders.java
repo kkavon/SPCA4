@@ -1,13 +1,17 @@
 package net.codejava;
 
 import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.List;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
 import javax.persistence.Table;
 @Entity
 public class Orders {
@@ -17,8 +21,10 @@ public class Orders {
     @ManyToOne
     @JoinColumn(name = "user_id", referencedColumnName = "id")
     private User user; // Change from Customer to User
-    private LocalDate orderDate;
     
+    @OneToMany(mappedBy = "order", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<OrderItem> orderItems = new ArrayList<>();
+
     
 	public Long getId() {
 		return id;
@@ -32,12 +38,7 @@ public class Orders {
 	public void setUser(User user) {
 		this.user = user;
 	}
-	public LocalDate getOrderDate() {
-		return orderDate;
-	}
-	public void setOrderDate(LocalDate orderDate) {
-		this.orderDate = orderDate;
-	}
+
 
     
 }
