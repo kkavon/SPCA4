@@ -1,42 +1,59 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
-    <meta charset="UTF-8">
-    <title>Products</title>
+<meta charset="UTF-8">
+<title>Products</title>
 </head>
 <body>
-    <h1>Products</h1>
-    <form th:action="@{/stock}" method="get">
-        <input type="text" name="filter" placeholder="Filter by title, manufacturer, or category" />
-        <input type="submit" value="Filter" />
-    </form>
-    <table>
-        <thead>
-            <tr>
-                <th>Title</th>
-                <th>Manufacturer</th>
-                <th>Price</th>
-                <th>Category</th>
-                <th>Quantity</th>
-                <th>Add To Cart</th>
-            </tr>
-        </thead>
-        <tbody>
-            <tr th:each="product : ${products}">
-                <td th:text="${product.title}"></td>
-                <td th:text="${product.manufacturer}"></td>
-                <td th:text="${product.price}"></td>
-                <td th:text="${product.category}"></td>
-                <td th:text="${product.quantity}"></td>
-                <td>
-                    <form th:action="@{/products/addToCart/{id}(id=${product.id})}" method="post">
-                        <input type="number" name="quantity" min="1" th:max="${product.quantity}" value="1" />
-                        <input type="submit" value="Add To Cart" />
-                    </form>
-                </td>
-                <a href="/cart">View Cart</a>
-            </tr>
-        </tbody>
-    </table>
+	<h1>Products</h1>
+	<form th:action="@{/products/search/customer}" method="get">
+		<input type="text" name="filter"
+			placeholder="Filter by title, manufacturer, or category" /> <input
+			type="submit" value="Filter" />
+	</form>
+	<table>
+		<thead>
+			<tr>
+				<th><a th:href="@{/stock/customer/title/asc}">+</a> <a
+					th:href="@{/stock/customer/title/desc}">-</a> Title</th>
+				<th><a th:href="@{/stock/customer/manufacturer/asc}">+</a> <a
+					th:href="@{/stock/customer/manufacturer/desc}">-</a> Manufacturer</th>
+				<th><a th:href="@{/stock/customer/price/asc}">+</a> <a
+					th:href="@{/stock/customer/price/desc}">-</a> Price</th>
+				<th>Category</th>
+				<th>Quantity</th>
+				<th>Add To Cart</th>
+			</tr>
+		</thead>
+		<thead>
+			<tr>
+				<th>Title</th>
+				<th>Manufacturer</th>
+				<th>Price</th>
+				<th>Category</th>
+				<th>Quantity</th>
+				<th>Add To Cart</th>
+			</tr>
+		</thead>
+		<tbody>
+			<tr th:each="product : ${products}">
+				<td th:text="${product.title}"></td>
+				<td th:text="${product.manufacturer}"></td>
+				<td th:text="${product.price}"></td>
+				<td th:text="${product.category}"></td>
+				<td th:text="${product.quantity}"></td>
+				<td>
+					<form th:action="@{/products/addToCart/{id}(id=${product.id})}"
+						method="post">
+						<input type="number" name="quantity" min="1"
+							th:max="${product.quantity}" value="1" /> <input type="submit"
+							value="Add To Cart" />
+					</form>
+				</td>
+
+			</tr>
+			<a href="/cart">View Cart</a>
+		</tbody>
+	</table>
 </body>
 </html>
