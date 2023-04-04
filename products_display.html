@@ -1,19 +1,56 @@
+<!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
     <title>Products</title>
+    <style>
+        table {
+            border-collapse: collapse;
+            width: 100%;
+        }
+
+        table, th, td {
+            border: 1px solid black;
+        }
+
+        th, td {
+            padding: 8px;
+            text-align: left;
+        }
+
+        th {
+            background-color: #f2f2f2;
+        }
+    </style>
 </head>
 <body>
     <h1>Products</h1>
+    <form th:action="@{/products/search}" method="get">
+        <label for="search-bar">Search for a Stock Item:</label>
+        <input type="text" id="search-bar" name="searchTerm" placeholder="Seach for a product...">
+        <button type="submit">Search</button>
+    </form>
     <table>
         <thead>
             <tr>
-                <th>Title</th>
-                <th>Manufacturer</th>
-                <th>Price</th>
+                <th>
+                    <a th:href="@{/stock/title/asc}">+</a>
+                    <a th:href="@{/stock/title/desc}">-</a>
+                    Title
+                </th>
+                <th>
+                    <a th:href="@{/stock/manufacturer/asc}">+</a>
+                    <a th:href="@{/stock/manufacturer/desc}">-</a>
+                    Manufacturer
+                </th>
+                <th>
+                    <a th:href="@{/stock/price/asc}">+</a>
+                    <a th:href="@{/stock/price/desc}">-</a>
+                    Price
+                </th>
                 <th>Category</th>
                 <th>Quantity</th>
-                <th>Edit</th>
+                <th>Actions</th>
             </tr>
         </thead>
         <tbody>
@@ -22,12 +59,18 @@
                 <td th:text="${product.manufacturer}"></td>
                 <td th:text="${product.price}"></td>
                 <td th:text="${product.category}"></td>
-                 <td th:text="${product.quantity}"></td>
+                <td th:text="${product.quantity}"></td>
                 <td>
-    <a th:href="@{/products/edit/{id}(id=${product.id})}" class="btn btn-primary">Edit</a>
-</td>
+                    <a th:href="@{/products/edit/{id}(id=${product.id})}" class="btn btn-primary">Edit</a>
+                    <form th:action="@{/products/addToCart/{id}(id=${product.id})}" method="post" style="display: inline;">
+                        <input type="number" name="quantity" min="1" th:max="${product.quantity}" value="1" />
+                        <input type="submit" value="Add To Cart" />
+                    </form>
+                </td>
             </tr>
         </tbody>
     </table>
+    <br>
+    <a href="/cart">View Cart</a>
 </body>
 </html>

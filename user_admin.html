@@ -19,38 +19,7 @@
 			</ul>
 		</nav>
 	</header>
-	<main>
-		<section id="stock-items">
-			<h2>Stock Items</h2>
-			<!-- display stock items here -->
-		</section>
-		<section id="search-stock">
-			<h2>Search Database</h2>
-			<form th:action="@{/products/search}" method="get">
-				<label for="search-bar">Search for a Stock Item:</label>
-				<input type="text" id="search-bar" name="searchTerm" placeholder="Seach for a product...">
-				<button type="submit">Search</button>
-			</form>
-		</section>
-	
-	</main>
 </body>
 </html>
 
 
-
-
-
-
-<!-- 	<section id="simulate-purchase">
-			<h2>Simulate Purchase of Stock Items</h2>
-			<form>
-				<label for="item-select">Select a Stock Item:</label>
-				<select id="item-select" name="item-select">
-					<option value="">--Please select an item--</option>
-				</select>
-				<label for="quantity">Enter Quantity:</label>
-				<input type="number" id="quantity" name="quantity" min="1" value="1">
-				<button type="submit">Purchase</button>
-			</form>
-		</section> -->

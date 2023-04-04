@@ -19,7 +19,8 @@ public class ProductController {
 
     @Autowired
     private ProductRepository productRepository;
-    
+    private ProductSortingStrategy sortingStrategy = new SortByTitle();
+    private boolean ascending = true;
     
     @PostMapping("/products/addToCart/{id}")
     public String addToCart(@PathVariable("id") Long id, @ModelAttribute("cart") Cart cart, @RequestParam("quantity") int quantity, Model model) {
@@ -92,6 +93,15 @@ public class ProductController {
     }
     
     
+    @GetMapping("/products/search/customer")
+    public String searchProductsCustomer(@RequestParam("filter") String filter, Model model) {
+        List<Product> products = productRepository.findAll();
+        List<Product> filteredProducts = filterProducts(products, filter);
+        model.addAttribute("products", filteredProducts);
+        return "products_display_customer";
+    }
+
+
     
     
     private List<Product> filterProducts(List<Product> products, String filter) {
@@ -106,35 +116,33 @@ public class ProductController {
             .collect(Collectors.toList());
     }
     
+    
     @GetMapping("/stock")
-    public String listProduct(Model model, @RequestParam(required = false) String sortBy, @RequestParam(required = false) String filter) {
+    public String listProducts(Model model) {
         List<Product> products = productRepository.findAll();
-        
-        if (filter != null && !filter.isEmpty()) {
-            products = filterProducts(products, filter);
-        }
-
-        ProductSortingStrategy sortingStrategy;
-
-        if (sortBy != null) {
-            switch (sortBy) {
-                case "title":
-                    sortingStrategy = new SortByTitle();
-                    break;
-                case "manufacturer":
-                    sortingStrategy = new SortByManufacturer();
-                    break;
-                case "price":
-                    sortingStrategy = new SortByPrice();
-                    break;
-                default:
-                    sortingStrategy = new SortByTitle();
-            }
-            products = sortingStrategy.sort(products);
-        }
-
-        model.addAttribute("products", products);
+        model.addAttribute("products", sortingStrategy.sort(products, ascending));
         return "products_display";
     }
+    
+    
+    //Factory Method Pattern
+    @GetMapping("/stock/customer/{sortType}/{direction}")
+    public String changeSortingStrategyCustomer(@PathVariable String sortType, @PathVariable String direction, Model model) {
+        ascending = "asc".equals(direction);
+        sortingStrategy = SortingStrategyFactory.getSortingStrategy(sortType);
+
+        List<Product> products = productRepository.findAll();
+        model.addAttribute("products", sortingStrategy.sort(products, ascending));
+        return "products_display_customer";
+    }
+
+    @GetMapping("/stock/{sortType}/{direction}")
+    public String changeSortingStrategy(@PathVariable String sortType, @PathVariable String direction) {
+        ascending = "asc".equals(direction);
+        sortingStrategy = SortingStrategyFactory.getSortingStrategy(sortType);
+
+        return "redirect:/stock";
+    }
+
 
 }
