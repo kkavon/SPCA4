@@ -19,6 +19,8 @@ public class User {
     private String shippingAddress;
     private String paymentMethod;
     
+    
+    
 	public Long getId() {
 		return id;
 	}

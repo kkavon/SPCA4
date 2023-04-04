@@ -12,6 +12,7 @@
                 <th>Manufacturer</th>
                 <th>Price</th>
                 <th>Category</th>
+                <th>Quantity</th>
                 <th>Edit</th>
             </tr>
         </thead>
@@ -21,6 +22,7 @@
                 <td th:text="${product.manufacturer}"></td>
                 <td th:text="${product.price}"></td>
                 <td th:text="${product.category}"></td>
+                 <td th:text="${product.quantity}"></td>
                 <td>
     <a th:href="@{/products/edit/{id}(id=${product.id})}" class="btn btn-primary">Edit</a>
 </td>

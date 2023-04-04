@@ -13,12 +13,18 @@ public class Cart {
     public void addItem(Product product, int quantity) {
         for (OrderItem item : items) {
             if (item.getProduct().getId().equals(product.getId())) {
-                item.setQuantity(item.getQuantity() + quantity);
+                int newQuantity = item.getQuantity() + quantity;
+                if (newQuantity <= product.getQuantity()) {
+                    item.setQuantity(newQuantity);
+                } else {
+                    item.setQuantity(product.getQuantity());
+                }
                 return;
             }
         }
         items.add(new OrderItem(product, quantity));
     }
+
 
     public List<OrderItem> getItems() {
         return items;
