@@ -17,6 +17,7 @@
                 <th>Manufacturer</th>
                 <th>Price</th>
                 <th>Category</th>
+                <th>Quantity</th>
                 <th>Add To Cart</th>
             </tr>
         </thead>
@@ -26,10 +27,14 @@
                 <td th:text="${product.manufacturer}"></td>
                 <td th:text="${product.price}"></td>
                 <td th:text="${product.category}"></td>
+                <td th:text="${product.quantity}"></td>
                 <td>
-                    <a th:href="@{/products/addToCart/{id}(id=${product.id})}">Add To Cart</a>
-                    <a href="/cart">View Cart</a>
+                    <form th:action="@{/products/addToCart/{id}(id=${product.id})}" method="post">
+                        <input type="number" name="quantity" min="1" th:max="${product.quantity}" value="1" />
+                        <input type="submit" value="Add To Cart" />
+                    </form>
                 </td>
+                <a href="/cart">View Cart</a>
             </tr>
         </tbody>
     </table>

@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Rating and Review</title>
+</head>
+<body>
+    <h1>Rate and Review Your Purchase</h1>
+    <form th:action="@{/submitRating}" method="post">
+        <label for="rating">Rating (1-5):</label>
+        <input type="number" id="rating" name="rating" min="1" max="5" required />
+        <br><br>
+        <label for="comment">Review:</label>
+        <textarea id="comment" name="comment" rows="4" cols="50" required></textarea>
+        <input type="hidden" th:name="orderId" th:value="${orderId}" />
+        
+        <br><br>
+        <input type="submit" value="Submit" />
+    </form>
+</body>
+</html>

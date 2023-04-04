@@ -17,7 +17,7 @@ public class Product {
     private String manufacturer;
     private double price;
     private String category;
-    private String image_url;
+    private Integer quantity;
     
     
 	public Long getId() {
@@ -50,11 +50,11 @@ public class Product {
 	public void setCategory(String category) {
 		this.category = category;
 	}
-	public String getImage() {
-		return image_url;
+	public Integer getQuantity() {
+		return quantity;
 	}
-	public void setImage(String image_url) {
-		this.image_url = image_url;
+	public void setQuantity(Integer quantity) {
+		this.quantity = quantity;
 	}
 
     

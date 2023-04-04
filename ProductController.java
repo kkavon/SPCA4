@@ -21,10 +21,10 @@ public class ProductController {
     private ProductRepository productRepository;
     
     
-    @GetMapping("/products/addToCart/{id}")
-    public String addToCart(@PathVariable("id") Long id, @ModelAttribute("cart") Cart cart, Model model) {
+    @PostMapping("/products/addToCart/{id}")
+    public String addToCart(@PathVariable("id") Long id, @ModelAttribute("cart") Cart cart, @RequestParam("quantity") int quantity, Model model) {
         Product product = productRepository.findById(id).orElseThrow(() -> new IllegalArgumentException("Invalid product Id:" + id));
-        cart.addItem(product, 1);
+        cart.addItem(product, quantity);
         return "redirect:/stock/customer";
     }
     
