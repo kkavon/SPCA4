@@ -25,6 +25,21 @@ public class Cart {
         items.add(new OrderItem(product, quantity));
     }
 
+    public double calculateTotalPrice(boolean applyDiscount, double discountPercentage) {
+        double totalPrice = 0;
+//        applyDiscount = true;
+
+        for (OrderItem item : items) {
+            totalPrice += item.getProduct().getPrice() * item.getQuantity();
+        }
+
+        if (applyDiscount) {
+            totalPrice *= (1 - discountPercentage / 100);
+        }
+
+        return totalPrice;
+    }
+
 
     public List<OrderItem> getItems() {
         return items;

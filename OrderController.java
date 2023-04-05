@@ -12,7 +12,6 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.SessionAttributes;
 
 @Controller
-@SessionAttributes("cart")
 public class OrderController {
 
     @Autowired
@@ -26,20 +25,15 @@ public class OrderController {
     @Autowired
     private ReviewRepository reviewRepository;
 
-    @ModelAttribute("cart")
-    public Cart createCart() {
-        return new Cart();
-    }
+  
 
     @GetMapping("/checkout")
-    public String checkout(@ModelAttribute("cart") Cart cart, Model model, HttpSession session) {
-        // Get the user ID from the session
+    public String checkout(Model model, HttpSession session) {
         Long userId = (Long) session.getAttribute("userId");
+        Cart cart = getCartFromSession(session);
 
-        // Fetch the user using the user ID need to update this to allow for concurrency
         User user = userRepository.findById(userId).orElse(null);
         if (user == null) {
-            // If the user is not found, redirect to the login page
             return "redirect:/login";
         }
         if (!cart.getItems().isEmpty()) {
@@ -50,7 +44,7 @@ public class OrderController {
         Orders order = new Orders();
         order.setUser(user);
 
-        // Save the order
+        // Save the rder
         orderRepository.save(order);
 
         // Save the orer items
@@ -68,9 +62,18 @@ public class OrderController {
         }
         cart.getItems().clear();
 
-        return "redirect:/rating";
+        return "redirect:/rating?orderId=" + order.getId();
+
     }
     
+    private Cart getCartFromSession(HttpSession session) {
+        Cart cart = (Cart) session.getAttribute("cart");
+        if (cart == null) {
+            cart = new Cart();
+            session.setAttribute("cart", cart);
+        }
+        return cart;
+    }
     
     @GetMapping("/all-order-history")
     public String showAllOrderHistory(Model model) {
@@ -81,16 +84,20 @@ public class OrderController {
     
     
     @GetMapping("/rating")
-    public String showRatingPage() {
+    public String showRatingPage(@RequestParam("orderId") Long orderId, Model model) {
+        Orders order = orderRepository.findById(orderId).orElse(null);
+        if (order != null) {
+            List<OrderItem> orderItems = orderItemRepository.findByOrder(order);
+            model.addAttribute("orderItems", orderItems);
+        }
         return "rating";
     }
-    
     @PostMapping("/submitRating")
-    public String submitRating(@RequestParam("rating") int rating, @RequestParam("comment") String comment, HttpSession session) {
+    public String submitRating(@RequestParam("rating") int rating, @RequestParam("comment") String comment, @RequestParam("productId") Long productId, HttpSession session) {
         // Get the user ID from the session - need to allow for concurrency
         Long userId = (Long) session.getAttribute("userId");
 
-        // get  user using the user ID
+        // get user using the user ID
         User user = userRepository.findById(userId).orElse(null);
         if (user == null) {
             // If the user is not found, redirect to the login page
@@ -103,13 +110,13 @@ public class OrderController {
         review.setRating(rating);
         review.setComment(comment);
 
-        // Get order item from the session
-        OrderItem lastOrderItem = (OrderItem) session.getAttribute("lastOrderItem");
+        // Get the product using the productId
+        Product product = productRepository.findById(productId).orElse(null);
 
-        if (lastOrderItem != null) {
-            review.setProduct(lastOrderItem.getProduct());
+        if (product != null) {
+            review.setProduct(product);
         } else {
-            // Ierorr if null
+            // Error if null
             return "redirect:/error";
         }
 
