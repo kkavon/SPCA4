@@ -25,16 +25,6 @@
 				<th>Add To Cart</th>
 			</tr>
 		</thead>
-		<thead>
-			<tr>
-				<th>Title</th>
-				<th>Manufacturer</th>
-				<th>Price</th>
-				<th>Category</th>
-				<th>Quantity</th>
-				<th>Add To Cart</th>
-			</tr>
-		</thead>
 		<tbody>
 			<tr th:each="product : ${products}">
 				<td th:text="${product.title}"></td>

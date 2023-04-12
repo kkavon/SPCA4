@@ -62,7 +62,7 @@
                 <td th:text="${product.quantity}"></td>
                 <td>
                     <a th:href="@{/products/edit/{id}(id=${product.id})}" class="btn btn-primary">Edit</a>
-                    <form th:action="@{/products/addToCart/{id}(id=${product.id})}" method="post" style="display: inline;">
+                    <form th:action="@{/products/addToCart/admin/{id}(id=${product.id})}" method="post" style="display: inline;">
                         <input type="number" name="quantity" min="1" th:max="${product.quantity}" value="1" />
                         <input type="submit" value="Add To Cart" />
                     </form>
