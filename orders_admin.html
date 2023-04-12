@@ -13,6 +13,9 @@
         <tr>
             <th>Order ID</th>
             <th>User ID</th>
+            <th>Customer Name</th>
+            <th>Email</th>
+            <th>Address</th>
             <th>Order Items</th>
         </tr>
     </thead>
@@ -20,6 +23,9 @@
         <tr th:each="order : ${orders}">
             <td th:text="${order.id}"></td>
             <td th:text="${order.user.id}"></td>
+            <td th:text="${order.user.username}"></td>
+            <td th:text="${order.user.email}"></td>
+            <td th:text="${order.user.shippingAddress}"></td>
             <td>
                 <table border="1">
                     <thead>
@@ -32,7 +38,7 @@
                     <tbody>
                         <tr th:each="orderItem : ${order.orderItems}">
                             <td th:text="${orderItem.product.id}"></td>
-                            <td th:text="${orderItem.product.name}"></td>
+                            <td th:text="${orderItem.product.title}"></td>
                             <td th:text="${orderItem.quantity}"></td>
                         </tr>
                     </tbody>
