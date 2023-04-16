@@ -25,6 +25,34 @@
         </tbody>
     </table>
     <h3>Total Price: <span th:text="${totalPrice}"></span></h3>
-    <a href="/checkout" class="btn btn-primary">Checkout</a>
+    
+    <form th:action="@{/cart}" method="post">
+        <div>
+            <label for="discountCode">Discount Code:</label>
+            <input type="text" id="discountCode" name="discountCode" placeholder="Enter discount code">
+        </div>
+        <button type="submit">Apply Discount Code</button>
+    </form>
+    
+    <h2>Payment Details</h2>
+    <form>
+        <div>
+            <label for="cardName">Name on Card:</label>
+            <input type="text" id="cardName" placeholder="Enter the name on card" required>
+        </div>
+        <div>
+            <label for="cardNumber">Card Number:</label>
+            <input type="text" id="cardNumber" placeholder="Enter the card number" required>
+        </div>
+        <div>
+            <label for="cardExpiry">Expiry Date:</label>
+            <input type="month" id="cardExpiry" placeholder="Enter the card number" required>
+        </div>
+        <div>
+            <label for="cardCVV">CVV:</label>
+            <input type="text" id="cardCVV" placeholder="Enter the CVV" required>
+        </div>
+        <button type="submit" formaction="/checkout">Checkout</button>
+    </form>
 </body>
 </html>

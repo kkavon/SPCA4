@@ -32,6 +32,8 @@
 				<td th:text="${product.price}"></td>
 				<td th:text="${product.category}"></td>
 				<td th:text="${product.quantity}"></td>
+<!-- 				<img th:src="@{${product.image}}" alt="Product image">
+ -->				
 				<td>
 					<form th:action="@{/products/addToCart/{id}(id=${product.id})}"
 						method="post">

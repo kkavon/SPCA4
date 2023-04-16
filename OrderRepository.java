@@ -11,6 +11,9 @@ import org.springframework.stereotype.Repository;
 public interface OrderRepository extends JpaRepository<Orders, Long> {
 	 @Query("SELECT o FROM Orders o JOIN FETCH o.user")
 	    List<Orders> findAllWithUsers();
+	    Orders findByUser(User user);
+
+
 	 
 	 
 }

@@ -21,7 +21,8 @@ public class UserController {
     private UserRepository userRepository;
     @Autowired
     private OrderRepository orderRepository;
-
+    @Autowired
+    private ProductRepository productRepository;
 
     @GetMapping("/login")
     public String showLoginPage() {
@@ -41,7 +42,9 @@ public class UserController {
     }
 
     @GetMapping("/customer/dashboard")
-    public String showCustomerDashboard() {
+    public String showCustomerDashboard(Model model) {
+        List<Product> products = productRepository.findAll();
+        model.addAttribute("products", products);
         return "user_customer";
     }
     
@@ -57,7 +60,7 @@ public class UserController {
         if (user != null) {
             session.setAttribute("userId", user.getId());
 
-            if (user.getRole().equals("admin")) {
+            if (user.getRole().equalsIgnoreCase("admin")) {
                 // Logged-in user is an admin, redirect to the admin dashboard
                 return "redirect:/admin/dashboard";
             } else {
@@ -86,10 +89,16 @@ public class UserController {
 
     @PostMapping("/users")
     public String createUser(@ModelAttribute User user) {
-    	userRepository.save(user);
+        if (userRepository.existsByEmail(user.getEmail())) {
+            return "redirect:/users/create?error=email";
+        }
+          if (user.getPassword().length() < 6) {
+            return "redirect:/users/create?error=password";
+        }
+
+        userRepository.save(user);
         return "redirect:/register_success";
     }
-
     
     @GetMapping("/admin/orders")
     public String showAllOrders(Model model) {

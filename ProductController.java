@@ -1,5 +1,6 @@
 package net.codejava;
 
+import java.io.IOException;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -56,6 +57,24 @@ public class ProductController {
 	    model.addAttribute("totalPrice", totalPrice);
 	    return "cart_view";
 	}
+	
+	@PostMapping("/cart")
+	public String applyDiscountCode(HttpSession session, Model model, @RequestParam(value = "discountCode", required = false) String discountCode) {
+	    Cart cart = getCartFromSession(session);
+
+	    boolean applyDiscount = false;
+	    double discountPercentage = 10;
+
+	    if ("discount10".equalsIgnoreCase(discountCode)) {
+	        applyDiscount = true;
+	    }
+
+	    double totalPrice = cart.calculateTotalPrice(applyDiscount, discountPercentage);
+	    model.addAttribute("items", cart.getItems());
+	    model.addAttribute("totalPrice", totalPrice);
+	    return "cart_view";
+	}
+
 
 	private Cart getCartFromSession(HttpSession session) {
 		Cart cart = (Cart) session.getAttribute("cart");
@@ -73,6 +92,8 @@ public class ProductController {
 		System.out.println("Products" + products);
 		return "products_display_customer";
 	}
+	
+	
 
 	@GetMapping("/products/create")
 	public String createProductForm(Model model) {
@@ -86,6 +107,21 @@ public class ProductController {
 		return "redirect:/products";
 	}
 
+//	
+//	@PostMapping("/products")
+//	public String createProduct(@ModelAttribute Product product, @RequestParam("image") MultipartFile file) {
+//	    if (!file.isEmpty()) {
+//	        try {
+//	            byte[] image = file.getBytes();
+//	            product.setImage(image);
+//	        } catch (IOException e) {
+//	            e.printStackTrace();
+//	        }
+//	    }
+//	    productRepository.save(product);
+//	    return "redirect:/products";
+//	}
+	
 	@GetMapping("/products/edit/{id}")
 	public String editProductForm(@PathVariable("id") Long id, Model model) {
 		Product product = productRepository.findById(id)
@@ -134,6 +170,12 @@ public class ProductController {
 		return "products_display";
 	}
 
+	
+	@GetMapping("/products")
+	public String redirectToStock() {
+	    return "redirect:/stock";
+	}
+	
 	// Factory Method Pattern
 	@GetMapping("/stock/customer/{sortType}/{direction}")
 	public String changeSortingStrategyCustomer(@PathVariable String sortType, @PathVariable String direction,
@@ -153,5 +195,7 @@ public class ProductController {
 
 		return "redirect:/stock";
 	}
+	
+
 
 }
