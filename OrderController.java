@@ -1,6 +1,8 @@
 package net.codejava;
 
 import java.util.List;
+
+import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -92,9 +94,11 @@ public class OrderController {
         }
         return "rating";
     }
-    @PostMapping("/submitRating")
-    public String submitRating(@RequestParam("rating") int rating, @RequestParam("comment") String comment, @RequestParam("productId") Long productId, HttpSession session) {
-        // Get the user ID from the session - need to allow for concurrency
+    
+    
+    @PostMapping("/submitRatings")
+    public String submitRatings(HttpServletRequest request, HttpSession session) {
+        // Get the user ID from the session
         Long userId = (Long) session.getAttribute("userId");
 
         // get user using the user ID
@@ -104,25 +108,33 @@ public class OrderController {
             return "redirect:/login";
         }
 
-        // Save the rating and review to the database - Need to allow a review for each item, not the whole order. 
-        Review review = new Review();
-        review.setUser(user);
-        review.setRating(rating);
-        review.setComment(comment);
+        int orderItemCount = Integer.parseInt(request.getParameter("orderItemCount"));
 
-        // Get the product using the productId
-        Product product = productRepository.findById(productId).orElse(null);
+        for (int i = 0; i < orderItemCount; i++) {
+            int rating = Integer.parseInt(request.getParameter("rating-" + i));
+            String comment = request.getParameter("comment-" + i);
+            Long productId = Long.parseLong(request.getParameter("productId-" + i));
 
-        if (product != null) {
-            review.setProduct(product);
-        } else {
-            // Error if null
-            return "redirect:/error";
+            // Save the rating and review to the database
+            Review review = new Review();
+            review.setUser(user);
+            review.setRating(rating);
+            review.setComment(comment);
+
+            // Get the product using the productId
+            Product product = productRepository.findById(productId).orElse(null);
+
+            if (product != null) {
+                review.setProduct(product);
+            } else {
+                // Error if null
+                return "redirect:/error";
+            }
+
+            reviewRepository.save(review);
         }
 
-        reviewRepository.save(review);
-
-        return "redirect:/";
+        return "redirect:/login";
     }
 
 }

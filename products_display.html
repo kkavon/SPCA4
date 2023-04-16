@@ -60,6 +60,9 @@
                 <td th:text="${product.price}"></td>
                 <td th:text="${product.category}"></td>
                 <td th:text="${product.quantity}"></td>
+                <!--  <td>
+        <img th:src="@{'data:image/png;base64,' + ${T(org.apache.tomcat.util.codec.binary.Base64).encodeBase64String(product.image)}}" alt="Product Image" width="100" />
+    </td> -->
                 <td>
                     <a th:href="@{/products/edit/{id}(id=${product.id})}" class="btn btn-primary">Edit</a>
                     <form th:action="@{/products/addToCart/admin/{id}(id=${product.id})}" method="post" style="display: inline;">
